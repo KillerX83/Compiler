@@ -1,0 +1,16 @@
+a := 2 * 4;
+
+b := 10;
+
+if ( a > b) then b := a else a := b
+
+x := 0;
+
+while ( x < a ) x := x + 1 done
+
+for (i := 0; i < b; i := i + 2) do ( x := x + 1 )
+
+// a = 10
+// b = 10
+// x = 15
+// i = 10

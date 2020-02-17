@@ -1,0 +1,633 @@
+Grammar
+
+    0 $accept: program $end
+
+    1 program: %empty
+    2        | program stmt
+
+    3 stmt: FOR '(' exp ';' exp ';' exp ')' DO '(' exp ')'
+    4     | WHILE '(' exp ')' exp DONE
+    5     | IF exp THEN exp ELSE exp
+    6     | IF exp THEN exp
+    7     | exp ';'
+
+    8 exp: exp CMP exp
+    9    | NAME ASN exp
+   10    | '(' exp ')'
+   11    | NUMBER
+   12    | NAME
+   13    | exp '+' exp
+   14    | exp '-' exp
+   15    | exp '*' exp
+   16    | exp '/' exp
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    '(' (40) 3 4 10
+    ')' (41) 3 4 10
+    '*' (42) 15
+    '+' (43) 13
+    '-' (45) 14
+    '/' (47) 16
+    ';' (59) 3 7
+    error (256)
+    NUMBER <d> (258) 11
+    NAME <s> (259) 9 12
+    FOR (260) 3
+    DO (261) 3
+    WHILE (262) 4
+    DONE (263) 4
+    IF (264) 5 6
+    THEN (265) 5 6
+    ELSE (266) 5
+    ASN (267) 9
+    CMP <fn> (268) 8
+
+
+Nonterminals, with rules where they appear
+
+    $accept (21)
+        on left: 0
+    program (22)
+        on left: 1 2
+        on right: 0 2
+    stmt <a> (23)
+        on left: 3 4 5 6 7
+        on right: 2
+    exp <a> (24)
+        on left: 8 9 10 11 12 13 14 15 16
+        on right: 3 4 5 6 7 8 9 10 13 14 15 16
+
+
+State 0
+
+    0 $accept: . program $end
+
+    $default  reduce using rule 1 (program)
+
+    program  go to state 1
+
+
+State 1
+
+    0 $accept: program . $end
+    2 program: program . stmt
+
+    $end    shift, and go to state 2
+    NUMBER  shift, and go to state 3
+    NAME    shift, and go to state 4
+    FOR     shift, and go to state 5
+    WHILE   shift, and go to state 6
+    IF      shift, and go to state 7
+    '('     shift, and go to state 8
+
+    stmt  go to state 9
+    exp   go to state 10
+
+
+State 2
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+State 3
+
+   11 exp: NUMBER .
+
+    $default  reduce using rule 11 (exp)
+
+
+State 4
+
+    9 exp: NAME . ASN exp
+   12    | NAME .
+
+    ASN  shift, and go to state 11
+
+    $default  reduce using rule 12 (exp)
+
+
+State 5
+
+    3 stmt: FOR . '(' exp ';' exp ';' exp ')' DO '(' exp ')'
+
+    '('  shift, and go to state 12
+
+
+State 6
+
+    4 stmt: WHILE . '(' exp ')' exp DONE
+
+    '('  shift, and go to state 13
+
+
+State 7
+
+    5 stmt: IF . exp THEN exp ELSE exp
+    6     | IF . exp THEN exp
+
+    NUMBER  shift, and go to state 3
+    NAME    shift, and go to state 4
+    '('     shift, and go to state 8
+
+    exp  go to state 14
+
+
+State 8
+
+   10 exp: '(' . exp ')'
+
+    NUMBER  shift, and go to state 3
+    NAME    shift, and go to state 4
+    '('     shift, and go to state 8
+
+    exp  go to state 15
+
+
+State 9
+
+    2 program: program stmt .
+
+    $default  reduce using rule 2 (program)
+
+
+State 10
+
+    7 stmt: exp . ';'
+    8 exp: exp . CMP exp
+   13    | exp . '+' exp
+   14    | exp . '-' exp
+   15    | exp . '*' exp
+   16    | exp . '/' exp
+
+    CMP  shift, and go to state 16
+    '+'  shift, and go to state 17
+    '-'  shift, and go to state 18
+    '*'  shift, and go to state 19
+    '/'  shift, and go to state 20
+    ';'  shift, and go to state 21
+
+
+State 11
+
+    9 exp: NAME ASN . exp
+
+    NUMBER  shift, and go to state 3
+    NAME    shift, and go to state 4
+    '('     shift, and go to state 8
+
+    exp  go to state 22
+
+
+State 12
+
+    3 stmt: FOR '(' . exp ';' exp ';' exp ')' DO '(' exp ')'
+
+    NUMBER  shift, and go to state 3
+    NAME    shift, and go to state 4
+    '('     shift, and go to state 8
+
+    exp  go to state 23
+
+
+State 13
+
+    4 stmt: WHILE '(' . exp ')' exp DONE
+
+    NUMBER  shift, and go to state 3
+    NAME    shift, and go to state 4
+    '('     shift, and go to state 8
+
+    exp  go to state 24
+
+
+State 14
+
+    5 stmt: IF exp . THEN exp ELSE exp
+    6     | IF exp . THEN exp
+    8 exp: exp . CMP exp
+   13    | exp . '+' exp
+   14    | exp . '-' exp
+   15    | exp . '*' exp
+   16    | exp . '/' exp
+
+    THEN  shift, and go to state 25
+    CMP   shift, and go to state 16
+    '+'   shift, and go to state 17
+    '-'   shift, and go to state 18
+    '*'   shift, and go to state 19
+    '/'   shift, and go to state 20
+
+
+State 15
+
+    8 exp: exp . CMP exp
+   10    | '(' exp . ')'
+   13    | exp . '+' exp
+   14    | exp . '-' exp
+   15    | exp . '*' exp
+   16    | exp . '/' exp
+
+    CMP  shift, and go to state 16
+    '+'  shift, and go to state 17
+    '-'  shift, and go to state 18
+    '*'  shift, and go to state 19
+    '/'  shift, and go to state 20
+    ')'  shift, and go to state 26
+
+
+State 16
+
+    8 exp: exp CMP . exp
+
+    NUMBER  shift, and go to state 3
+    NAME    shift, and go to state 4
+    '('     shift, and go to state 8
+
+    exp  go to state 27
+
+
+State 17
+
+   13 exp: exp '+' . exp
+
+    NUMBER  shift, and go to state 3
+    NAME    shift, and go to state 4
+    '('     shift, and go to state 8
+
+    exp  go to state 28
+
+
+State 18
+
+   14 exp: exp '-' . exp
+
+    NUMBER  shift, and go to state 3
+    NAME    shift, and go to state 4
+    '('     shift, and go to state 8
+
+    exp  go to state 29
+
+
+State 19
+
+   15 exp: exp '*' . exp
+
+    NUMBER  shift, and go to state 3
+    NAME    shift, and go to state 4
+    '('     shift, and go to state 8
+
+    exp  go to state 30
+
+
+State 20
+
+   16 exp: exp '/' . exp
+
+    NUMBER  shift, and go to state 3
+    NAME    shift, and go to state 4
+    '('     shift, and go to state 8
+
+    exp  go to state 31
+
+
+State 21
+
+    7 stmt: exp ';' .
+
+    $default  reduce using rule 7 (stmt)
+
+
+State 22
+
+    8 exp: exp . CMP exp
+    9    | NAME ASN exp .
+   13    | exp . '+' exp
+   14    | exp . '-' exp
+   15    | exp . '*' exp
+   16    | exp . '/' exp
+
+    CMP  shift, and go to state 16
+    '+'  shift, and go to state 17
+    '-'  shift, and go to state 18
+    '*'  shift, and go to state 19
+    '/'  shift, and go to state 20
+
+    $default  reduce using rule 9 (exp)
+
+
+State 23
+
+    3 stmt: FOR '(' exp . ';' exp ';' exp ')' DO '(' exp ')'
+    8 exp: exp . CMP exp
+   13    | exp . '+' exp
+   14    | exp . '-' exp
+   15    | exp . '*' exp
+   16    | exp . '/' exp
+
+    CMP  shift, and go to state 16
+    '+'  shift, and go to state 17
+    '-'  shift, and go to state 18
+    '*'  shift, and go to state 19
+    '/'  shift, and go to state 20
+    ';'  shift, and go to state 32
+
+
+State 24
+
+    4 stmt: WHILE '(' exp . ')' exp DONE
+    8 exp: exp . CMP exp
+   13    | exp . '+' exp
+   14    | exp . '-' exp
+   15    | exp . '*' exp
+   16    | exp . '/' exp
+
+    CMP  shift, and go to state 16
+    '+'  shift, and go to state 17
+    '-'  shift, and go to state 18
+    '*'  shift, and go to state 19
+    '/'  shift, and go to state 20
+    ')'  shift, and go to state 33
+
+
+State 25
+
+    5 stmt: IF exp THEN . exp ELSE exp
+    6     | IF exp THEN . exp
+
+    NUMBER  shift, and go to state 3
+    NAME    shift, and go to state 4
+    '('     shift, and go to state 8
+
+    exp  go to state 34
+
+
+State 26
+
+   10 exp: '(' exp ')' .
+
+    $default  reduce using rule 10 (exp)
+
+
+State 27
+
+    8 exp: exp . CMP exp
+    8    | exp CMP exp .
+   13    | exp . '+' exp
+   14    | exp . '-' exp
+   15    | exp . '*' exp
+   16    | exp . '/' exp
+
+    '+'  shift, and go to state 17
+    '-'  shift, and go to state 18
+    '*'  shift, and go to state 19
+    '/'  shift, and go to state 20
+
+    $default  reduce using rule 8 (exp)
+
+
+State 28
+
+    8 exp: exp . CMP exp
+   13    | exp . '+' exp
+   13    | exp '+' exp .
+   14    | exp . '-' exp
+   15    | exp . '*' exp
+   16    | exp . '/' exp
+
+    '*'  shift, and go to state 19
+    '/'  shift, and go to state 20
+
+    $default  reduce using rule 13 (exp)
+
+
+State 29
+
+    8 exp: exp . CMP exp
+   13    | exp . '+' exp
+   14    | exp . '-' exp
+   14    | exp '-' exp .
+   15    | exp . '*' exp
+   16    | exp . '/' exp
+
+    '*'  shift, and go to state 19
+    '/'  shift, and go to state 20
+
+    $default  reduce using rule 14 (exp)
+
+
+State 30
+
+    8 exp: exp . CMP exp
+   13    | exp . '+' exp
+   14    | exp . '-' exp
+   15    | exp . '*' exp
+   15    | exp '*' exp .
+   16    | exp . '/' exp
+
+    $default  reduce using rule 15 (exp)
+
+
+State 31
+
+    8 exp: exp . CMP exp
+   13    | exp . '+' exp
+   14    | exp . '-' exp
+   15    | exp . '*' exp
+   16    | exp . '/' exp
+   16    | exp '/' exp .
+
+    $default  reduce using rule 16 (exp)
+
+
+State 32
+
+    3 stmt: FOR '(' exp ';' . exp ';' exp ')' DO '(' exp ')'
+
+    NUMBER  shift, and go to state 3
+    NAME    shift, and go to state 4
+    '('     shift, and go to state 8
+
+    exp  go to state 35
+
+
+State 33
+
+    4 stmt: WHILE '(' exp ')' . exp DONE
+
+    NUMBER  shift, and go to state 3
+    NAME    shift, and go to state 4
+    '('     shift, and go to state 8
+
+    exp  go to state 36
+
+
+State 34
+
+    5 stmt: IF exp THEN exp . ELSE exp
+    6     | IF exp THEN exp .
+    8 exp: exp . CMP exp
+   13    | exp . '+' exp
+   14    | exp . '-' exp
+   15    | exp . '*' exp
+   16    | exp . '/' exp
+
+    ELSE  shift, and go to state 37
+    CMP   shift, and go to state 16
+    '+'   shift, and go to state 17
+    '-'   shift, and go to state 18
+    '*'   shift, and go to state 19
+    '/'   shift, and go to state 20
+
+    $default  reduce using rule 6 (stmt)
+
+
+State 35
+
+    3 stmt: FOR '(' exp ';' exp . ';' exp ')' DO '(' exp ')'
+    8 exp: exp . CMP exp
+   13    | exp . '+' exp
+   14    | exp . '-' exp
+   15    | exp . '*' exp
+   16    | exp . '/' exp
+
+    CMP  shift, and go to state 16
+    '+'  shift, and go to state 17
+    '-'  shift, and go to state 18
+    '*'  shift, and go to state 19
+    '/'  shift, and go to state 20
+    ';'  shift, and go to state 38
+
+
+State 36
+
+    4 stmt: WHILE '(' exp ')' exp . DONE
+    8 exp: exp . CMP exp
+   13    | exp . '+' exp
+   14    | exp . '-' exp
+   15    | exp . '*' exp
+   16    | exp . '/' exp
+
+    DONE  shift, and go to state 39
+    CMP   shift, and go to state 16
+    '+'   shift, and go to state 17
+    '-'   shift, and go to state 18
+    '*'   shift, and go to state 19
+    '/'   shift, and go to state 20
+
+
+State 37
+
+    5 stmt: IF exp THEN exp ELSE . exp
+
+    NUMBER  shift, and go to state 3
+    NAME    shift, and go to state 4
+    '('     shift, and go to state 8
+
+    exp  go to state 40
+
+
+State 38
+
+    3 stmt: FOR '(' exp ';' exp ';' . exp ')' DO '(' exp ')'
+
+    NUMBER  shift, and go to state 3
+    NAME    shift, and go to state 4
+    '('     shift, and go to state 8
+
+    exp  go to state 41
+
+
+State 39
+
+    4 stmt: WHILE '(' exp ')' exp DONE .
+
+    $default  reduce using rule 4 (stmt)
+
+
+State 40
+
+    5 stmt: IF exp THEN exp ELSE exp .
+    8 exp: exp . CMP exp
+   13    | exp . '+' exp
+   14    | exp . '-' exp
+   15    | exp . '*' exp
+   16    | exp . '/' exp
+
+    CMP  shift, and go to state 16
+    '+'  shift, and go to state 17
+    '-'  shift, and go to state 18
+    '*'  shift, and go to state 19
+    '/'  shift, and go to state 20
+
+    $default  reduce using rule 5 (stmt)
+
+
+State 41
+
+    3 stmt: FOR '(' exp ';' exp ';' exp . ')' DO '(' exp ')'
+    8 exp: exp . CMP exp
+   13    | exp . '+' exp
+   14    | exp . '-' exp
+   15    | exp . '*' exp
+   16    | exp . '/' exp
+
+    CMP  shift, and go to state 16
+    '+'  shift, and go to state 17
+    '-'  shift, and go to state 18
+    '*'  shift, and go to state 19
+    '/'  shift, and go to state 20
+    ')'  shift, and go to state 42
+
+
+State 42
+
+    3 stmt: FOR '(' exp ';' exp ';' exp ')' . DO '(' exp ')'
+
+    DO  shift, and go to state 43
+
+
+State 43
+
+    3 stmt: FOR '(' exp ';' exp ';' exp ')' DO . '(' exp ')'
+
+    '('  shift, and go to state 44
+
+
+State 44
+
+    3 stmt: FOR '(' exp ';' exp ';' exp ')' DO '(' . exp ')'
+
+    NUMBER  shift, and go to state 3
+    NAME    shift, and go to state 4
+    '('     shift, and go to state 8
+
+    exp  go to state 45
+
+
+State 45
+
+    3 stmt: FOR '(' exp ';' exp ';' exp ')' DO '(' exp . ')'
+    8 exp: exp . CMP exp
+   13    | exp . '+' exp
+   14    | exp . '-' exp
+   15    | exp . '*' exp
+   16    | exp . '/' exp
+
+    CMP  shift, and go to state 16
+    '+'  shift, and go to state 17
+    '-'  shift, and go to state 18
+    '*'  shift, and go to state 19
+    '/'  shift, and go to state 20
+    ')'  shift, and go to state 46
+
+
+State 46
+
+    3 stmt: FOR '(' exp ';' exp ';' exp ')' DO '(' exp ')' .
+
+    $default  reduce using rule 3 (stmt)
